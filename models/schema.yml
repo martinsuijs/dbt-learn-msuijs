@@ -1,15 +1,19 @@
 version: 2
+
+sources:
+  - name: jaffle_shop
+    database: raw
+    tables:
+      - name: customers
+      - name: orders
+  - name: stripe
+    database: raw
+    tables:
+      - name: payment
+
 models:
-  - name: customers
-    description: One record per customer
-    columns:
-      - name: customer_id
-        description: Primary key
-        tests:
-          - unique
-          - not_null
-      - name: first_order_date
-        description: NULL when a customer has not yet placed an order.
+  - name: payment
+    description: Order payments. Each order can be paid in multiple ways
   - name: stg_customers
     description: This model cleans up customer data
     columns:
@@ -30,3 +34,18 @@ models:
         tests:
           - accepted_values:
               values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
+  - name: orders_summary
+    description: {{ doc('orders_summary') }}
+  - name: fct_orders
+    description: Summary of order information for each customer. 
+    columns:
+      - name: customer_id
+        description: unique identifie of the customer
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: customer's first name
+      - name: last_name
+        description: customer's last name
+      
